@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { connectDB } from "../src/db/index";
 import { Task } from "../src/models/Task.model";
 import { updateTaskParamsSchema } from "../src/zod-validator/task.validator";
+import {MongoMemoryServer} from 'mongodb-memory-server'
 
 beforeAll(async () => {
   await connectDB();
@@ -14,6 +15,15 @@ beforeAll(async () => {
 afterAll(async () => {
   await mongoose.connection.close();
 });
+
+// let mongoServer: MongoMemoryServer;
+// beforeAll(async () => {
+//   mongoServer = await MongoMemoryServer.create();
+
+//   process.env.MONGODB_URI = mongoServer.getUri();
+
+//   await connectDB();
+// });
 
 describe("GET /", () => {
   it("should return API Working", async () => {
@@ -175,6 +185,7 @@ describe("DELETE /tasks/:taskId", () => {
     const res = await request(app).delete('/api/tasks/d348fn49efn49')
     expect(res.status).toBe(400)
     expect(res.body.message).toBe("INVALID MONGODB ID")
+
   })
 
 })
