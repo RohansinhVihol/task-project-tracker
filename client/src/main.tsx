@@ -4,9 +4,15 @@ import './index.css'
 import App from './App.tsx'
 import { TaskProvider } from './context/TaskContext.tsx'
 import { BrowserRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+
+const queryclient = new QueryClient()
 
 
 createRoot(document.getElementById('root')!).render(
+  
+  <QueryClientProvider client={queryclient}>
   <TaskProvider>
     <BrowserRouter>
   <StrictMode>
@@ -14,4 +20,5 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>
   </BrowserRouter>
   </TaskProvider>
+  </QueryClientProvider>
 )

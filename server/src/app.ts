@@ -3,12 +3,14 @@ import cookieParser from 'cookie-parser'
 import {errorHandler} from './middlewares/errorHandler.middlware.js'
 import taskRoutes from './Routes/Task.routes.js'
 import projectRoutes from './Routes/Project.routes.js'
+import cors from 'cors'
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
+app.use(cors())
 
 app.get('/' , (req,res) => {
     res.json({

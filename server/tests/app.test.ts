@@ -82,10 +82,6 @@ describe("GET /tasks", () => {
 
   //  failure path
   it("should return 400 when there is no task in db",async() =>{
-
-  //   jest.spyOn(Task, "find").mockReturnValue({
-  //   sort: jest.fn().mockResolvedValue([] as any)
-  // } as any);
    jest.spyOn(Task, "find").mockReturnValue({
     sort: jest.fn(() => Promise.resolve([]))
    } as any);

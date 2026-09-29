@@ -5,12 +5,12 @@ import { tasks } from "../SampleData";
 
 
 type Task = {
-//    _id: string,
+//   _id: string,
     title: string,
     description: string,
     assignee: string,
-    status: 'todo' | 'in-progress' | 'completed'
-    dueDate: string
+    status: 'todo' | 'in-progress' | 'completed',
+    dueDate: string,
 }
 
 type TaskContextType = {

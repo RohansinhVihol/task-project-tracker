@@ -16,7 +16,7 @@ export const updateTaskSchema = z.object({
     description: z.string().min(1).optional(),
     status: z.enum(["todo","in-progress","completed"]).optional(),
     assignee: z.string().min(1).optional(),
-    dueDate: z.date().optional()
+    dueDate:z.coerce.date().optional(),
 })
 
 export type updateTaskSchema = z.infer<typeof updateTaskParamsSchema>

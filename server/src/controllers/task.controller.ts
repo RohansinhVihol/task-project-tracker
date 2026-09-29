@@ -155,28 +155,23 @@ export const updateTask = asyncHandler(async(req:updateTaskRequest,res) => {
         throw new ApiError(400,"Please Enter Valid Status Value")
     }
 
-    const updatedTask = await Task.findByIdAndUpdate(taskId,
-        {
-    
-            $set:{
-
-                ...(title !== undefined && {title}),
-                ...(description !== undefined && {description}),
-                ...(assignee !== undefined && {assignee}),
-                ...(dueDate !== undefined && {dueDate: new Date(dueDate)}),
-                ...(status !== undefined && {status})
-
-                // title: title && title,
-                // description: description && description,
-                // assignee: assignee && assignee,
-                // dueDate: dueDate && dueDate,
-                // status: status && status
-            },
-        },
-        {
-        new: true,
-        }
-    )
+   const updatedTask = await Task.findByIdAndUpdate(
+  taskId,
+  {
+    $set: {
+      ...(title !== undefined && { title }),
+      ...(description !== undefined && { description }),
+      ...(assignee !== undefined && { assignee }),
+      ...(dueDate !== undefined && {
+        dueDate: new Date(dueDate),
+      }),
+      ...(status !== undefined && { status }),
+    },
+  },
+  {
+    returnDocument: "after",
+  }
+);
 
     const task = await Task.findById(taskId)
 
