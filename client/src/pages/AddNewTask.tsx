@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { backendUrl } from "../App";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {taskSchema , type TaskFormData} from '../Zod-Validation/Task.Schema'
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addTask } from "../api/TaskApi";
+import { isBackEdge } from "zod/v4/core";
 
 const AddNewTask = () => {
   const [title, setTitle] = useState("");
@@ -17,6 +18,13 @@ const AddNewTask = () => {
   const [dueDate, setDueDate] = useState("");
   const [taskSubmitted, setTaskSubmitted] = useState(false)
   const navigate = useNavigate()
+
+  type User = {
+  _id: string;
+  name: string;
+  email: string;
+};
+  const [users, setUsers] = useState<User[]>([])
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,7 +72,9 @@ const AddNewTask = () => {
     console.log(data)
 try {
   
-    const res = await axios.post(backendUrl + '/api/tasks',data)
+    const res = await axios.post(backendUrl + '/api/tasks',data,{
+      withCredentials:true
+    })
 
     if(res.data.success){
         console.log("Task created successfully");
@@ -73,9 +83,12 @@ try {
     }
   
     reset()
-} catch (error) {
+} catch (error:any) {
 
   console.error(error)
+    toast.error(
+    error.response?.data?.message || "You need to login first"
+  );
   
 }
 
@@ -109,6 +122,26 @@ try {
   const onSubmitt = (data:any) => {
     mutate(data)
   }
+
+  const fetchUsers = async() => {
+    try {
+      const res = await axios.get(backendUrl + '/api/user/all-user')
+  
+      if(res.data.success){
+          setUsers(res.data.data)
+          console.log(res.data.data);
+          
+      }
+    } catch (error) {
+      console.error(error)
+    }
+
+    
+  }
+
+  useEffect(() => {
+    fetchUsers()
+  },[])
 
 
   return (
@@ -250,12 +283,16 @@ try {
             Assignee
           </label>
 
-          <input
+          <select
           {...register("assignee")}
-            type="text"
-            id="assignee"
-            className="w-full border rounded px-2 py-1"
-          />
+          id="assignee"
+          className="w-full border rounderd px-2 py-1"
+          >
+            <option value="">Select Assignee</option>
+            {users?.map((user:any) => (
+              <option key={user._id} value={user._id}>{user.name}</option>
+            ))}
+          </select>
         </div>
 
         <div>

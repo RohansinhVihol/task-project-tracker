@@ -22,14 +22,10 @@ const taskSchema = new Schema<ITask, TaskModel>(
     description: {
       type: String,
     },
-    // project: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "Project",
-    // },
     assignee: {
-      // type: Schema.Types.ObjectId,
-      // ref: "User",
-      type:String
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      //type:String
     },
     dueDate: {
       type: Date,
@@ -39,10 +35,10 @@ const taskSchema = new Schema<ITask, TaskModel>(
       enum: ["todo", "in-progress", "completed"],
       default: "todo",
     },
-    // createdBy: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "User",
-    // },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );

@@ -24,6 +24,8 @@ const ShowAllTask = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<boolean>(false)
 
+  const [isRegister, setIsRegister] = useState<boolean>(false)
+
   const fetchTaskApi = async() => {
    try {
      setLoading(true)
@@ -50,6 +52,37 @@ const ShowAllTask = () => {
     fetchTaskApi()
   },[taskDelete])
 
+    const authStatus = async() => {
+    try {
+
+      const res = await axios.post(backendUrl + '/api/user/auth-user',{},{withCredentials:true})
+
+      if(res.data.success){
+        setIsRegister(true)
+      }
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const logOutUser = async() => {
+    try {
+
+      const res = await axios.post(backendUrl + '/api/user/logout',{},{withCredentials:true})
+      if(res.data.success){
+        setIsRegister(false)
+      }
+
+      
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() =>{
+    authStatus()
+  },[])
 
   //fetching data using Tanstack query 
 
@@ -81,13 +114,13 @@ const ShowAllTask = () => {
   const deleteTaskHandler = async(taskId : string) => {
     try {
 
-      const res = await axios.delete(backendUrl + `/api/tasks/${taskId}`)
+      const res = await axios.delete(backendUrl + `/api/tasks/${taskId}`, { withCredentials:true })
 
       if(res.data.success){
         toast.success('Task Removed Successfully')
         fetchTaskApi()
       }
-      
+      2
     } catch (error:any) {
       console.log(error)
       toast.error(error.response?.data)
@@ -107,8 +140,9 @@ const ShowAllTask = () => {
       <button onClick={() => navigate("/add-new")} className="border border-gray-400 px-4 py-2 bg-white hover:bg-gray-100 cursor-pointer">
       ADD NEW
       </button>
-    </div>
 
+      <button onClick={() => isRegister ? logOutUser() : navigate('/auth')} className="border border-gray-400 px-4 py-2 bg-white hover:bg-gray-100 cursor-pointer">{isRegister ? "Logout" : "Login"}</button>
+    </div>
 
     <div className="space-y-4">
 
@@ -137,7 +171,7 @@ const ShowAllTask = () => {
             <div>
               <p className="text-sm text-gray-500">Assignee</p>
               <p className="text-gray-700">
-                {data.assignee}
+                {data.assignee?.name}
               </p>
             </div>
 
